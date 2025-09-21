@@ -1,18 +1,4 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-  query,
-  where,
-  orderBy,
-  limit,
-  addDoc,
-  serverTimestamp,
-} from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+// Mock data for Doctor service - no Firebase dependency
 import { APPOINTMENT_STATUS } from '@/utils/constants';
 
 export interface DoctorProfile {
@@ -87,101 +73,211 @@ export interface Prescription {
   updatedAt: Date;
 }
 
+// Mock data
+const mockDoctorProfile: DoctorProfile = {
+  uid: 'mock-doctor-id',
+  phone: '+1234567890',
+  name: 'Dr. Rajesh Kumar',
+  email: 'rajesh.kumar@doctor.com',
+  aadhaar: '123456789012',
+  age: 45,
+  gender: 'Male',
+  licenseNumber: 'DOC-2024-001',
+  specialization: 'General Medicine',
+  experience: 15,
+  languages: ['Hindi', 'English', 'Telugu'],
+  consultationFee: 500,
+  availability: {
+    startTime: '09:00',
+    endTime: '17:00',
+    days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+  },
+  isAvailable: true,
+  rating: 4.9,
+  totalConsultations: 1247,
+  createdAt: new Date('2020-01-01'),
+  updatedAt: new Date()
+};
+
+const mockAppointments = [
+  {
+    id: 'appointment-1',
+    doctorId: 'mock-doctor-id',
+    patientId: 'patient-1',
+    patientName: 'Sunita Devi',
+    patientPhone: '+9876543210',
+    date: new Date().toISOString().split('T')[0],
+    time: '10:00',
+    reason: 'Regular checkup for diabetes',
+    urgency: 'medium',
+    status: 'pending',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 'appointment-2',
+    doctorId: 'mock-doctor-id',
+    patientId: 'patient-2',
+    patientName: 'Amit Singh',
+    patientPhone: '+9876543211',
+    date: new Date().toISOString().split('T')[0],
+    time: '14:00',
+    reason: 'Chest pain evaluation',
+    urgency: 'high',
+    status: 'pending',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 'appointment-3',
+    doctorId: 'mock-doctor-id',
+    patientId: 'patient-3',
+    patientName: 'Lakshmi Iyer',
+    patientPhone: '+9876543212',
+    date: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    time: '11:00',
+    reason: 'Follow-up for hypertension',
+    urgency: 'low',
+    status: 'pending',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
+];
+
+const mockConsultations = [
+  {
+    id: 'consultation-1',
+    doctorId: 'mock-doctor-id',
+    patientId: 'patient-4',
+    patientName: 'Ramesh Kumar',
+    patientPhone: '+9876543213',
+    appointmentId: 'appointment-4',
+    type: 'video' as const,
+    status: 'scheduled' as const,
+    scheduledAt: new Date(),
+    duration: 30,
+    notes: 'Patient complained of persistent cough'
+  },
+  {
+    id: 'consultation-2',
+    doctorId: 'mock-doctor-id',
+    patientId: 'patient-5',
+    patientName: 'Geeta Reddy',
+    patientPhone: '+9876543214',
+    appointmentId: 'appointment-5',
+    type: 'audio' as const,
+    status: 'completed' as const,
+    scheduledAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
+    startedAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
+    completedAt: new Date(Date.now() - 1.5 * 60 * 60 * 1000),
+    duration: 30,
+    notes: 'Diabetes management consultation',
+    prescription: {
+      medications: [
+        {
+          name: 'Metformin',
+          dosage: '500mg',
+          frequency: 'Twice daily',
+          duration: '30 days',
+          instructions: 'Take with food'
+        }
+      ],
+      diagnosis: 'Type 2 Diabetes',
+      followUpDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      notes: 'Continue current medication, monitor blood sugar levels'
+    }
+  }
+];
+
+const mockRecentPatients = [
+  {
+    id: 'patient-6',
+    name: 'Rajesh Patel',
+    phone: '+9876543215',
+    lastConsultation: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+    diagnosis: 'Hypertension'
+  },
+  {
+    id: 'patient-7',
+    name: 'Meera Joshi',
+    phone: '+9876543216',
+    lastConsultation: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+    diagnosis: 'Diabetes Type 2'
+  },
+  {
+    id: 'patient-8',
+    name: 'Suresh Kumar',
+    phone: '+9876543217',
+    lastConsultation: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+    diagnosis: 'Respiratory Infection'
+  }
+];
+
 class DoctorService {
   // Create doctor profile
   async createDoctorProfile(doctorData: Partial<DoctorProfile>): Promise<void> {
-    const doctorRef = doc(db, 'users', doctorData.uid!);
-    await setDoc(doctorRef, {
-      ...doctorData,
-      role: 'doctor',
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    });
+    // Mock implementation - just log
+    console.log('Creating doctor profile:', doctorData);
   }
 
   // Get doctor profile
   async getDoctorProfile(uid: string): Promise<DoctorProfile | null> {
-    try {
-      const doctorDoc = await getDoc(doc(db, 'users', uid));
-      if (doctorDoc.exists()) {
-        const data = doctorDoc.data();
-        if (data.role === 'doctor') {
-          return data as DoctorProfile;
-        }
-      }
-      return null;
-    } catch (error) {
-      console.error('Error getting doctor profile:', error);
-      throw error;
-    }
+    // Mock implementation - return mock profile
+    return mockDoctorProfile;
   }
 
   // Update doctor profile
   async updateDoctorProfile(uid: string, updates: Partial<DoctorProfile>): Promise<void> {
-    const doctorRef = doc(db, 'users', uid);
-    await updateDoc(doctorRef, {
-      ...updates,
-      updatedAt: serverTimestamp(),
-    });
+    // Mock implementation - just log
+    console.log('Updating doctor profile:', uid, updates);
   }
 
   // Update doctor availability
   async updateAvailability(uid: string, isAvailable: boolean): Promise<void> {
-    await this.updateDoctorProfile(uid, { isAvailable });
+    // Mock implementation - just log
+    console.log('Updating availability:', uid, isAvailable);
   }
 
   // Get pending appointments
   async getPendingAppointments(doctorId: string): Promise<any[]> {
-    try {
-      const appointmentsRef = collection(db, 'appointments');
-      const q = query(
-        appointmentsRef,
-        where('doctorId', '==', doctorId),
-        where('status', '==', 'pending'),
-        orderBy('createdAt', 'asc')
-      );
-      
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate() || new Date(),
-        updatedAt: doc.data().updatedAt?.toDate() || new Date(),
-      }));
-    } catch (error) {
-      console.error('Error getting pending appointments:', error);
-      throw error;
-    }
+    // Mock implementation - return mock appointments
+    return mockAppointments;
   }
 
   // Accept appointment
   async acceptAppointment(appointmentId: string): Promise<void> {
-    const appointmentRef = doc(db, 'appointments', appointmentId);
-    await updateDoc(appointmentRef, {
-      status: 'accepted',
-      updatedAt: serverTimestamp(),
-    });
+    // Mock implementation - update appointment status
+    const appointment = mockAppointments.find(a => a.id === appointmentId);
+    if (appointment) {
+      appointment.status = 'accepted';
+      appointment.updatedAt = new Date();
+    }
+    console.log('Appointment accepted:', appointmentId);
   }
 
   // Reject appointment
   async rejectAppointment(appointmentId: string, reason?: string): Promise<void> {
-    const appointmentRef = doc(db, 'appointments', appointmentId);
-    await updateDoc(appointmentRef, {
-      status: 'rejected',
-      rejectionReason: reason,
-      updatedAt: serverTimestamp(),
-    });
+    // Mock implementation - update appointment status
+    const appointment = mockAppointments.find(a => a.id === appointmentId);
+    if (appointment) {
+      appointment.status = 'rejected';
+      appointment.updatedAt = new Date();
+    }
+    console.log('Appointment rejected:', appointmentId, reason);
   }
 
   // Start consultation
   async startConsultation(consultationData: Omit<Consultation, 'id'>): Promise<string> {
-    const consultationsRef = collection(db, 'consultations');
-    const docRef = await addDoc(consultationsRef, {
+    // Mock implementation - add to mock consultations
+    const newConsultation: Consultation = {
       ...consultationData,
+      id: `consultation-${Date.now()}`,
       status: 'in_progress',
-      startedAt: serverTimestamp(),
-    });
-    return docRef.id;
+      startedAt: new Date(),
+    };
+    mockConsultations.push(newConsultation as any);
+    console.log('Consultation started:', newConsultation);
+    return newConsultation.id;
   }
 
   // Complete consultation
@@ -191,82 +287,39 @@ class DoctorService {
     diagnosis?: string,
     notes?: string
   ): Promise<void> {
-    const consultationRef = doc(db, 'consultations', consultationId);
-    
-    // Get consultation data to calculate duration
-    const consultationDoc = await getDoc(consultationRef);
-    const consultationData = consultationDoc.data() as Consultation;
-    
-    const startedAt = consultationData.startedAt?.toDate() || new Date();
-    const completedAt = new Date();
-    const duration = Math.round((completedAt.getTime() - startedAt.getTime()) / (1000 * 60));
-
-    await updateDoc(consultationRef, {
-      status: 'completed',
-      completedAt: serverTimestamp(),
-      duration,
-      notes,
-      prescription: prescription ? {
-        medications: prescription,
-        diagnosis: diagnosis || '',
-        notes,
-      } : undefined,
-    });
-
-    // Create prescription document if provided
-    if (prescription && diagnosis) {
-      await this.createPrescription({
-        doctorId: consultationData.doctorId,
-        patientId: consultationData.patientId,
-        consultationId,
-        medications: prescription,
-        diagnosis,
-        notes,
-      });
+    // Mock implementation - update consultation status
+    const consultation = mockConsultations.find(c => c.id === consultationId);
+    if (consultation) {
+      consultation.status = 'completed';
+      consultation.completedAt = new Date();
+      consultation.notes = notes || '';
+      if (prescription) {
+        consultation.prescription = {
+          medications: prescription.map(med => ({
+            ...med,
+            instructions: med.instructions || ''
+          })),
+          diagnosis: diagnosis || '',
+          followUpDate: '',
+          notes: notes || '',
+        };
+      }
     }
-
-    // Update appointment status
-    const appointmentRef = doc(db, 'appointments', consultationData.appointmentId);
-    await updateDoc(appointmentRef, {
-      status: 'completed',
-      updatedAt: serverTimestamp(),
-    });
+    console.log('Consultation completed:', consultationId, prescription, diagnosis, notes);
   }
 
   // Create prescription
   async createPrescription(prescriptionData: Omit<Prescription, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
-    const prescriptionsRef = collection(db, 'prescriptions');
-    const docRef = await addDoc(prescriptionsRef, {
-      ...prescriptionData,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    });
-    return docRef.id;
+    // Mock implementation - just return ID
+    const prescriptionId = `prescription-${Date.now()}`;
+    console.log('Prescription created:', prescriptionId, prescriptionData);
+    return prescriptionId;
   }
 
   // Get doctor's consultations
   async getDoctorConsultations(doctorId: string, limitCount: number = 20): Promise<Consultation[]> {
-    try {
-      const consultationsRef = collection(db, 'consultations');
-      const q = query(
-        consultationsRef,
-        where('doctorId', '==', doctorId),
-        orderBy('scheduledAt', 'desc'),
-        limit(limitCount)
-      );
-      
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        scheduledAt: doc.data().scheduledAt?.toDate() || new Date(),
-        startedAt: doc.data().startedAt?.toDate(),
-        completedAt: doc.data().completedAt?.toDate(),
-      })) as Consultation[];
-    } catch (error) {
-      console.error('Error getting doctor consultations:', error);
-      throw error;
-    }
+    // Mock implementation - return mock consultations
+    return mockConsultations.slice(0, limitCount);
   }
 
   // Get patient's medical history
@@ -276,51 +329,13 @@ class DoctorService {
     prescriptions: Prescription[];
     consultations: Consultation[];
   }> {
-    try {
-      const [vitalsSnapshot, reportsSnapshot, prescriptionsSnapshot, consultationsSnapshot] = await Promise.all([
-        getDocs(query(collection(db, 'vitals'), where('userId', '==', patientId), orderBy('timestamp', 'desc'))),
-        getDocs(query(collection(db, 'medicalReports'), where('userId', '==', patientId), orderBy('uploadedAt', 'desc'))),
-        getDocs(query(collection(db, 'prescriptions'), where('patientId', '==', patientId), orderBy('createdAt', 'desc'))),
-        getDocs(query(collection(db, 'consultations'), where('patientId', '==', patientId), orderBy('scheduledAt', 'desc'))),
-      ]);
-
-      const vitals = vitalsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        timestamp: doc.data().timestamp?.toDate() || new Date(),
-      }));
-
-      const reports = reportsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        uploadedAt: doc.data().uploadedAt?.toDate() || new Date(),
-      }));
-
-      const prescriptions = prescriptionsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate() || new Date(),
-        updatedAt: doc.data().updatedAt?.toDate() || new Date(),
-      })) as Prescription[];
-
-      const consultations = consultationsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        scheduledAt: doc.data().scheduledAt?.toDate() || new Date(),
-        startedAt: doc.data().startedAt?.toDate(),
-        completedAt: doc.data().completedAt?.toDate(),
-      })) as Consultation[];
-
-      return {
-        vitals,
-        reports,
-        prescriptions,
-        consultations,
-      };
-    } catch (error) {
-      console.error('Error getting patient medical history:', error);
-      throw error;
-    }
+    // Mock implementation - return empty arrays
+    return {
+      vitals: [],
+      reports: [],
+      prescriptions: [],
+      consultations: [],
+    };
   }
 
   // Assign ASHA task
@@ -334,32 +349,19 @@ class DoctorService {
     description: string,
     assignedBy: string
   ): Promise<string> {
-    // Get patient details
-    const patientDoc = await getDoc(doc(db, 'users', patientId));
-    const patientData = patientDoc.data();
-
-    const taskData = {
+    // Mock implementation - just return task ID
+    const taskId = `task-${Date.now()}`;
+    console.log('ASHA task assigned:', taskId, {
       ashaId,
       patientId,
-      patientName: patientData?.name || 'Unknown',
-      patientPhone: patientData?.phone || '',
-      patientAddress: patientData?.address || '',
       taskType,
       priority,
       scheduledDate,
       scheduledTime,
-      status: 'pending',
       description,
       assignedBy,
-    };
-
-    const tasksRef = collection(db, 'ashaTasks');
-    const docRef = await addDoc(tasksRef, {
-      ...taskData,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
     });
-    return docRef.id;
+    return taskId;
   }
 
   // Get doctor statistics
@@ -371,47 +373,33 @@ class DoctorService {
     thisMonthConsultations: number;
     totalEarnings: number;
   }> {
-    try {
-      const [consultationsSnapshot, appointmentsSnapshot] = await Promise.all([
-        getDocs(query(collection(db, 'consultations'), where('doctorId', '==', doctorId))),
-        getDocs(query(collection(db, 'appointments'), where('doctorId', '==', doctorId))),
-      ]);
+    // Mock implementation - calculate from mock data
+    const totalConsultations = mockConsultations.length;
+    const completedConsultations = mockConsultations.filter(c => c.status === 'completed').length;
+    const pendingAppointments = mockAppointments.filter(a => a.status === 'pending').length;
+    
+    // Calculate this month's consultations
+    const thisMonth = new Date();
+    thisMonth.setDate(1);
+    thisMonth.setHours(0, 0, 0, 0);
+    
+    const thisMonthConsultations = mockConsultations.filter(consultation => {
+      const consultationDate = consultation.scheduledAt;
+      return consultationDate >= thisMonth;
+    }).length;
 
-      const consultations = consultationsSnapshot.docs.map(doc => doc.data());
-      const appointments = appointmentsSnapshot.docs.map(doc => doc.data());
+    const averageRating = mockDoctorProfile.rating || 0;
+    const consultationFee = mockDoctorProfile.consultationFee || 0;
+    const totalEarnings = completedConsultations * consultationFee;
 
-      const totalConsultations = consultations.length;
-      const completedConsultations = consultations.filter(c => c.status === 'completed').length;
-      const pendingAppointments = appointments.filter(a => a.status === 'pending').length;
-
-      // Calculate this month's consultations
-      const thisMonth = new Date();
-      thisMonth.setDate(1);
-      thisMonth.setHours(0, 0, 0, 0);
-
-      const thisMonthConsultations = consultations.filter(consultation => {
-        const consultationDate = consultation.scheduledAt?.toDate() || new Date();
-        return consultationDate >= thisMonth;
-      }).length;
-
-      // Get doctor profile for rating and fee
-      const doctorProfile = await this.getDoctorProfile(doctorId);
-      const averageRating = doctorProfile?.rating || 0;
-      const consultationFee = doctorProfile?.consultationFee || 0;
-      const totalEarnings = completedConsultations * consultationFee;
-
-      return {
-        totalConsultations,
-        completedConsultations,
-        pendingAppointments,
-        averageRating,
-        thisMonthConsultations,
-        totalEarnings,
-      };
-    } catch (error) {
-      console.error('Error getting doctor statistics:', error);
-      throw error;
-    }
+    return {
+      totalConsultations,
+      completedConsultations,
+      pendingAppointments,
+      averageRating,
+      thisMonthConsultations,
+      totalEarnings,
+    };
   }
 
   // Get doctor dashboard data
@@ -421,39 +409,21 @@ class DoctorService {
     statistics: any;
     recentPatients: any[];
   }> {
-    try {
-      const [pendingAppointments, consultations, statistics] = await Promise.all([
-        this.getPendingAppointments(doctorId),
-        this.getDoctorConsultations(doctorId, 50),
-        this.getDoctorStatistics(doctorId),
-      ]);
+    // Mock implementation - return dashboard data
+    const pendingAppointments = mockAppointments;
+    const today = new Date().toISOString().split('T')[0];
+    const todayConsultations = mockConsultations.filter(consultation => 
+      consultation.scheduledAt.toISOString().split('T')[0] === today
+    );
+    const statistics = await this.getDoctorStatistics(doctorId);
+    const recentPatients = mockRecentPatients;
 
-      // Get today's consultations
-      const today = new Date().toISOString().split('T')[0];
-      const todayConsultations = consultations.filter(consultation => 
-        consultation.scheduledAt.toISOString().split('T')[0] === today
-      );
-
-      // Get recent patients (from completed consultations)
-      const completedConsultations = consultations.filter(c => c.status === 'completed');
-      const recentPatients = completedConsultations.slice(0, 10).map(consultation => ({
-        id: consultation.patientId,
-        name: consultation.patientName,
-        phone: consultation.patientPhone,
-        lastConsultation: consultation.completedAt,
-        diagnosis: consultation.prescription?.diagnosis,
-      }));
-
-      return {
-        pendingAppointments,
-        todayConsultations,
-        statistics,
-        recentPatients,
-      };
-    } catch (error) {
-      console.error('Error getting dashboard data:', error);
-      throw error;
-    }
+    return {
+      pendingAppointments,
+      todayConsultations,
+      statistics,
+      recentPatients,
+    };
   }
 }
 

@@ -9,6 +9,7 @@ import { Heart, ArrowLeft, Users, Calendar, TrendingUp, CheckCircle, Clock, Aler
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { doctorService } from '@/services/doctorService';
+import { ashaService } from '@/services/ashaService';
 
 export default function DoctorDashboard() {
   const { userProfile, signOut } = useAuth();

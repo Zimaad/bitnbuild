@@ -36,19 +36,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
     // Set mock user data for development
     const mockUser = {
       uid: 'mock-user-id',
-      phoneNumber: '+1234567890',
-      displayName: 'Demo User',
+      phoneNumber: '+9876543210',
+      displayName: 'Sunita Devi',
     } as any;
 
     const mockProfile = {
-      id: 'mock-user-id',
-      phoneNumber: '+1234567890',
-      name: 'Demo User',
-      email: 'demo@example.com',
+      uid: 'mock-user-id',
+      phone: '+9876543210',
+      name: 'Sunita Devi',
+      email: 'sunita.devi@user.com',
+      aadhaar: '987654321098',
+      age: 35,
+      gender: 'Female',
+      diseases: ['Diabetes Type 2', 'Hypertension'],
+      emergencyContact: {
+        name: 'Rajesh Kumar',
+        phone: '+9876543211',
+        relation: 'Husband'
+      },
       role: 'user' as UserRole,
-      createdAt: new Date(),
+      createdAt: new Date('2023-01-01'),
       updatedAt: new Date(),
-    };
+    } as any;
 
     setUser(mockUser);
     setUserProfile(mockProfile);

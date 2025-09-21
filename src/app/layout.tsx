@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AIProvider } from "@/contexts/AIContext";
 import { Toaster } from "react-hot-toast";
-import RoleSwitcher from "@/components/RoleSwitcher";
+
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,7 +33,7 @@ export default function RootLayout({
           <AuthProvider>
             <AIProvider>
               {children}
-              <RoleSwitcher />
+              
               <Toaster
               position="top-right"
               toastOptions={{
