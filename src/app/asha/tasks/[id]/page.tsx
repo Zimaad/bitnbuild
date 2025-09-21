@@ -53,7 +53,7 @@ export default function TaskCompletionPage({ params }: { params: { id: string } 
       setVitals(prev => ({
         ...prev,
         [parent]: {
-          ...prev[parent as keyof typeof prev],
+          ...(prev[parent as keyof typeof prev] as any),
           [child]: value
         }
       }));
@@ -86,7 +86,7 @@ export default function TaskCompletionPage({ params }: { params: { id: string } 
         symptoms: vitals.symptoms || undefined
       };
 
-      await ashaService.completeTask(params.id, vital sRecorded, vitals.symptoms);
+      await ashaService.completeTask(params.id, vitalsRecorded, vitals.symptoms);
       toast.success('Task completed successfully');
       
       // Redirect to dashboard
