@@ -11,7 +11,7 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { doctorService } from '@/services/doctorService';
 
-export default function ConsultationRoomPage({ params }: { params: { id: string } }) {
+export default function ConsultationRoomPage({ params }: { params: Promise<{ id: string }> }) {
   const { userProfile } = useAuth();
   const { t } = useLanguage();
   const [consultation, setConsultation] = useState<any>(null);
@@ -35,9 +35,12 @@ export default function ConsultationRoomPage({ params }: { params: { id: string 
       try {
         setLoading(true);
         
+        // Resolve params Promise
+        const resolvedParams = await params;
+        
         // Load consultation details
         const consultations = await doctorService.getDoctorConsultations(userProfile.uid, 100);
-        const currentConsultation = consultations.find(c => c.id === params.id);
+        const currentConsultation = consultations.find(c => c.id === resolvedParams.id);
         
         if (!currentConsultation) {
           toast.error('Consultation not found');
@@ -59,7 +62,7 @@ export default function ConsultationRoomPage({ params }: { params: { id: string 
     };
 
     loadConsultationData();
-  }, [userProfile, params.id]);
+  }, [userProfile, params]);
 
   const handleAddMedication = () => {
     setPrescription(prev => ({

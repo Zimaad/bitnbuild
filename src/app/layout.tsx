@@ -18,7 +18,11 @@ export const metadata: Metadata = {
   description: "A multilingual, AI-assisted digital health platform connecting patients, ASHA workers, and doctors for chronic disease management and emergency response.",
   keywords: "health, rural healthcare, ASHA, doctor consultation, emergency services, AI health assistant",
   authors: [{ name: "Aarogya Sahayak Team" }],
-  viewport: "width=device-width, initial-scale=1",
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

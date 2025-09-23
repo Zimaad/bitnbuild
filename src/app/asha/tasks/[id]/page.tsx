@@ -11,7 +11,7 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { ashaService } from '@/services/ashaService';
 
-export default function TaskCompletionPage({ params }: { params: { id: string } }) {
+export default function TaskCompletionPage({ params }: { params: Promise<{ id: string }> }) {
   const { userProfile } = useAuth();
   const { t } = useLanguage();
   const [task, setTask] = useState<any>(null);
@@ -30,9 +30,11 @@ export default function TaskCompletionPage({ params }: { params: { id: string } 
     const loadTask = async () => {
       try {
         setLoading(true);
+        // Resolve params Promise
+        const resolvedParams = await params;
         // Get task from mock data
         const tasks = await ashaService.getPendingTasks(userProfile?.uid || '');
-        const foundTask = tasks.find(t => t.id === params.id);
+        const foundTask = tasks.find(t => t.id === resolvedParams.id);
         setTask(foundTask);
       } catch (error) {
         console.error('Error loading task:', error);
@@ -45,7 +47,7 @@ export default function TaskCompletionPage({ params }: { params: { id: string } 
     if (userProfile) {
       loadTask();
     }
-  }, [userProfile, params.id]);
+  }, [userProfile, params]);
 
   const handleVitalChange = (field: string, value: any) => {
     if (field.includes('.')) {
@@ -69,6 +71,9 @@ export default function TaskCompletionPage({ params }: { params: { id: string } 
     try {
       setSubmitting(true);
       
+      // Resolve params Promise
+      const resolvedParams = await params;
+      
       // Prepare vitals data
       const vitalsRecorded = {
         bloodPressure: vitals.bloodPressure.systolic && vitals.bloodPressure.diastolic ? {
@@ -86,7 +91,7 @@ export default function TaskCompletionPage({ params }: { params: { id: string } 
         symptoms: vitals.symptoms || undefined
       };
 
-      await ashaService.completeTask(params.id, vitalsRecorded, vitals.symptoms);
+      await ashaService.completeTask(resolvedParams.id, vitalsRecorded, vitals.symptoms);
       toast.success('Task completed successfully');
       
       // Redirect to dashboard
