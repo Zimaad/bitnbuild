@@ -28,7 +28,8 @@ try {
   analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
 } catch (error) {
   console.warn('Firebase initialization failed, using mock services for development:', error);
-  // Import mock services
+  // Import mock services synchronously
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { mockAuth, mockDb, mockStorage, mockAnalytics } = require('./mockFirebase');
   auth = mockAuth;
   db = mockDb;

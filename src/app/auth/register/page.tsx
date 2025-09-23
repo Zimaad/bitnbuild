@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 import { USER_ROLES } from '@/utils/constants';
 
 export default function RegisterPage() {
+  const { user } = useAuth();
   const [step, setStep] = useState<'role' | 'phone' | 'otp' | 'profile'>('role');
   const [selectedRole, setSelectedRole] = useState<'user' | 'asha' | 'doctor'>('user');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -113,7 +114,6 @@ export default function RegisterPage() {
     try {
       setLoading(true);
       
-      const user = useAuth().user;
       if (!user) {
         throw new Error('User not authenticated');
       }
