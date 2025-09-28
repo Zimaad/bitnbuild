@@ -80,30 +80,31 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-background to-secondary-50 flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-primary-100/20 to-secondary-100/20"></div>
+      <div className="w-full max-w-md relative z-10">
         {/* Header */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center space-x-2 text-gray-600 hover:text-gray-900 mb-4">
-            <ArrowLeft className="h-4 w-4" />
+        <div className="text-center mb-8 animate-fade-in">
+          <Link href="/" className="inline-flex items-center space-x-2 text-gray-600 hover:text-primary-600 transition-colors mb-6 group">
+            <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
             <span>Back to Home</span>
           </Link>
           
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Heart className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-bold text-gray-900">{t('app.name')}</h1>
+          <div className="flex items-center justify-center space-x-3 mb-6">
+            <Heart className="h-10 w-10 text-primary animate-heartbeat" />
+            <h1 className="text-3xl font-bold text-gray-900">{t('app.name')}</h1>
           </div>
           
-          <p className="text-gray-600">Sign in to your account</p>
+          <p className="text-gray-600 text-lg">Sign in to your account</p>
         </div>
 
         {/* Login Form */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-center">
+        <Card className="animate-slide-in-up">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-center text-xl">
               {step === 'phone' ? 'Enter Phone Number' : 'Verify OTP'}
             </CardTitle>
-            <CardDescription className="text-center">
+            <CardDescription className="text-center text-base">
               {step === 'phone' 
                 ? 'We\'ll send you a verification code'
                 : `Enter the 6-digit code sent to +91 ${phoneNumber}`
@@ -137,6 +138,8 @@ export default function LoginPage() {
                 
                 <Button 
                   type="submit" 
+                  variant="gradient"
+                  size="lg"
                   className="w-full" 
                   disabled={loading || phoneNumber.length !== 10}
                 >
@@ -170,6 +173,8 @@ export default function LoginPage() {
                 <div className="space-y-3">
                   <Button 
                     type="submit" 
+                    variant="gradient-success"
+                    size="lg"
                     className="w-full" 
                     disabled={loading || otp.length !== 6}
                   >

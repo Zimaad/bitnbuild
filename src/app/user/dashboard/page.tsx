@@ -60,21 +60,21 @@ export default function UserDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50/30 via-background to-secondary-50/30">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-white/80 backdrop-blur-md shadow-soft border-b border-primary-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-2">
-              <Heart className="h-8 w-8 text-primary" />
+            <div className="flex items-center space-x-3">
+              <Heart className="h-8 w-8 text-primary animate-heartbeat" />
               <h1 className="text-2xl font-bold text-gray-900">{t('app.name')}</h1>
             </div>
             
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-600 font-medium">
                 Welcome, {userProfile?.name}
               </span>
-              <Button variant="outline" onClick={signOut}>
+              <Button variant="outline" onClick={signOut} className="hover:bg-destructive-50 hover:border-destructive-200 hover:text-destructive-700">
                 Logout
               </Button>
             </div>
@@ -84,28 +84,30 @@ export default function UserDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Health Score Card */}
-        <div className="mb-8">
-          <Card>
+        <div className="mb-8 animate-fade-in">
+          <Card className="bg-gradient-to-r from-primary-50 to-secondary-50 border-primary-200">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <TrendingUp className="h-5 w-5" />
+              <CardTitle className="flex items-center space-x-3 text-xl">
+                <div className="p-2 rounded-lg bg-primary-100">
+                  <TrendingUp className="h-6 w-6 text-primary-600" />
+                </div>
                 <span>Health Score</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
                 <div>
-                  <div className={`text-4xl font-bold ${getHealthScoreColor(healthSummary?.healthScore || 0)}`}>
+                  <div className={`text-5xl font-bold ${getHealthScoreColor(healthSummary?.healthScore || 0)} mb-2`}>
                     {healthSummary?.healthScore || 0}
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className={`text-lg font-medium ${getHealthScoreColor(healthSummary?.healthScore || 0)}`}>
                     {getHealthScoreLabel(healthSummary?.healthScore || 0)}
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-gray-600">Based on your latest vitals</p>
+                  <p className="text-sm text-gray-600 mb-3">Based on your latest vitals</p>
                   <Link href="/user/vitals">
-                    <Button variant="outline" size="sm" className="mt-2">
+                    <Button variant="gradient" size="sm">
                       View Details
                     </Button>
                   </Link>
@@ -118,12 +120,14 @@ export default function UserDashboard() {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Link href="/user/vitals">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="group hover:shadow-large transition-all duration-300 cursor-pointer animate-slide-in-up">
               <CardContent className="p-6">
-                <div className="flex items-center space-x-3">
-                  <Activity className="h-8 w-8 text-blue-600" />
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 rounded-xl bg-primary-100 group-hover:bg-primary-200 transition-colors">
+                    <Activity className="h-8 w-8 text-primary-600" />
+                  </div>
                   <div>
-                    <h3 className="font-semibold">Record Vitals</h3>
+                    <h3 className="font-semibold text-lg">Record Vitals</h3>
                     <p className="text-sm text-gray-600">Track your health</p>
                   </div>
                 </div>
@@ -132,12 +136,14 @@ export default function UserDashboard() {
           </Link>
 
           <Link href="/user/appointments">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="group hover:shadow-large transition-all duration-300 cursor-pointer animate-slide-in-up" style={{ animationDelay: '0.1s' }}>
               <CardContent className="p-6">
-                <div className="flex items-center space-x-3">
-                  <Calendar className="h-8 w-8 text-green-600" />
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 rounded-xl bg-secondary-100 group-hover:bg-secondary-200 transition-colors">
+                    <Calendar className="h-8 w-8 text-secondary-600" />
+                  </div>
                   <div>
-                    <h3 className="font-semibold">Book Appointment</h3>
+                    <h3 className="font-semibold text-lg">Book Appointment</h3>
                     <p className="text-sm text-gray-600">ASHA or Doctor</p>
                   </div>
                 </div>
@@ -146,12 +152,14 @@ export default function UserDashboard() {
           </Link>
 
           <Link href="/user/reports">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="group hover:shadow-large transition-all duration-300 cursor-pointer animate-slide-in-up" style={{ animationDelay: '0.2s' }}>
               <CardContent className="p-6">
-                <div className="flex items-center space-x-3">
-                  <FileText className="h-8 w-8 text-purple-600" />
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 rounded-xl bg-accent-100 group-hover:bg-accent-200 transition-colors">
+                    <FileText className="h-8 w-8 text-accent-600" />
+                  </div>
                   <div>
-                    <h3 className="font-semibold">Medical Reports</h3>
+                    <h3 className="font-semibold text-lg">Medical Reports</h3>
                     <p className="text-sm text-gray-600">Upload & view</p>
                   </div>
                 </div>
@@ -160,12 +168,14 @@ export default function UserDashboard() {
           </Link>
 
           <Link href="/user/emergency">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="group hover:shadow-large transition-all duration-300 cursor-pointer animate-slide-in-up" style={{ animationDelay: '0.3s' }}>
               <CardContent className="p-6">
-                <div className="flex items-center space-x-3">
-                  <Phone className="h-8 w-8 text-red-600" />
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 rounded-xl bg-destructive-100 group-hover:bg-destructive-200 transition-colors">
+                    <Phone className="h-8 w-8 text-destructive-600 animate-heartbeat" />
+                  </div>
                   <div>
-                    <h3 className="font-semibold">Emergency</h3>
+                    <h3 className="font-semibold text-lg">Emergency</h3>
                     <p className="text-sm text-gray-600">Get help now</p>
                   </div>
                 </div>

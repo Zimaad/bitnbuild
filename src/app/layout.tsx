@@ -32,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="font-sans antialiased bg-gray-50 min-h-screen">
+      <body className="font-sans antialiased bg-gradient-to-br from-primary-50/30 via-background to-secondary-50/30 min-h-screen">
         <LanguageProvider>
           <AuthProvider>
             <AIProvider>
@@ -43,21 +43,24 @@ export default function RootLayout({
               toastOptions={{
                 duration: 4000,
                 style: {
-                  background: '#363636',
-                  color: '#fff',
+                  background: 'var(--card)',
+                  color: 'var(--card-foreground)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '0.75rem',
+                  boxShadow: 'var(--shadow-medium)',
                 },
                 success: {
                   duration: 3000,
                   iconTheme: {
-                    primary: '#4ade80',
-                    secondary: '#fff',
+                    primary: 'var(--success)',
+                    secondary: 'var(--success-foreground)',
                   },
                 },
                 error: {
                   duration: 5000,
                   iconTheme: {
-                    primary: '#ef4444',
-                    secondary: '#fff',
+                    primary: 'var(--destructive)',
+                    secondary: 'var(--destructive-foreground)',
                   },
                 },
               }}
