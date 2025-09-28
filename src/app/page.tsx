@@ -13,13 +13,13 @@ export default function Home() {
   const { t, language, setLanguage } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-background to-secondary-50">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-white/80 backdrop-blur-md shadow-soft border-b border-primary-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-2">
-              <Heart className="h-8 w-8 text-primary" />
+            <div className="flex items-center space-x-3">
+              <Heart className="h-8 w-8 text-primary animate-heartbeat" />
               <h1 className="text-2xl font-bold text-gray-900">{t('app.name')}</h1>
             </div>
             
@@ -48,28 +48,29 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-100/20 to-secondary-100/20"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="text-center animate-fade-in">
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
               {t('app.name')}
             </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
               Bridging the Rural Health Divide with AI-Powered Healthcare Solutions
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/user/dashboard">
-                <Button size="lg" className="w-full sm:w-auto">
+                <Button variant="gradient" size="xl" className="w-full sm:w-auto animate-slide-in-up">
                   Patient Portal
                 </Button>
               </Link>
               <Link href="/asha/dashboard">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                <Button variant="gradient-success" size="xl" className="w-full sm:w-auto animate-slide-in-up" style={{ animationDelay: '0.1s' }}>
                   ASHA Portal
                 </Button>
               </Link>
               <Link href="/doctor/dashboard">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                <Button variant="gradient-accent" size="xl" className="w-full sm:w-auto animate-slide-in-up" style={{ animationDelay: '0.2s' }}>
                   Doctor Portal
                 </Button>
               </Link>
